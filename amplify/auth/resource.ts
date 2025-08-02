@@ -9,8 +9,8 @@ export const auth = defineAuth({
     email: true,
     externalProviders: {
       google: {
-        clientId: secret("GOOGLE_CLIENT_ID"),
-        clientSecret: secret("GOOGLE_CLIENT_SECRET"),
+        clientId: process.env.GOOGLE_CLIENT_ID || secret("GOOGLE_CLIENT_ID"),
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET || secret("GOOGLE_CLIENT_SECRET"),
         scopes: ["email", "openid", "profile"],
       },
       callbackUrls: [
