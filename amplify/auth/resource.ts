@@ -4,9 +4,6 @@ import { defineAuth, secret } from "@aws-amplify/backend";
  * Define and configure your auth resource
  * @see https://docs.amplify.aws/gen2/build-a-backend/auth
  */
-
-// For production deployment, Amplify Gen2 requires secrets to be set properly
-// This configuration works with environment variables set in Amplify Console
 export const auth = defineAuth({
   loginWith: {
     email: true,
