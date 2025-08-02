@@ -4,13 +4,16 @@ import { defineAuth, secret } from "@aws-amplify/backend";
  * Define and configure your auth resource
  * @see https://docs.amplify.aws/gen2/build-a-backend/auth
  */
+
+// For production deployment, Amplify Gen2 requires secrets to be set properly
+// This configuration works with environment variables set in Amplify Console
 export const auth = defineAuth({
   loginWith: {
     email: true,
     externalProviders: {
       google: {
-        clientId: process.env.GOOGLE_CLIENT_ID || secret("GOOGLE_CLIENT_ID"),
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET || secret("GOOGLE_CLIENT_SECRET"),
+        clientId: secret("GOOGLE_CLIENT_ID"),
+        clientSecret: secret("GOOGLE_CLIENT_SECRET"),
         scopes: ["email", "openid", "profile"],
       },
       callbackUrls: [
