@@ -5,20 +5,15 @@ const schema = a
     Todo: a.model({
       content: a.string(),
     }),
-    Member: a.model({
-      name: a.string().required(),
-      teamId: a.id(), // reference to Team
-      team: a.belongsTo("Team", "teamId"), // each member belongs to one team only
-    }),
-    Team: a.model({
-      userId: a.string().required(), // each team belongs to a user
-      type: a.string().required(), // 'first' or 'backup'
-      mantra: a.string().required(),
-      members: a.hasMany("Member", "teamId"),
-    }),
     WordsList: a.model({
       type: a.string().required(), // 'first' or 'backup'
-      list: a.json().array(),
+      list: a.hasMany("Word", "wordsListId"),
+    }),
+    Word: a.model({
+      id: a.string().required(),
+      data: a.json().required(), // JSON data for the word
+      wordsListId: a.id(), // reference to WordsList
+      wordsList: a.belongsTo("WordsList", "wordsListId"), // each word belongs to one words list only
     }),
   })
   .authorization((allow) => [allow.owner()]);
