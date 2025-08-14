@@ -1,5 +1,4 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
-import { Meaning, Phonetic, Word } from "../types/Word";
 
 const schema = a
   .schema({
