@@ -7,17 +7,28 @@ const schema = a
     }),
     Member: a.model({
       name: a.string().required(),
-      // 1. Create a reference field
-      teamId: a.id(),
-      // 2. Create a belongsTo relationship with the reference field
-      team: a.belongsTo("Team", "teamId"),
+      teamId: a.id(), // reference to Team
+      team: a.belongsTo("Team", "teamId"), // each member belongs to one team only
     }),
-
     Team: a.model({
+      userId: a.string().required(), // each team belongs to a user
+      type: a.string().required(), // 'first' or 'backup'
       mantra: a.string().required(),
-      // 3. Create a hasMany relationship with the reference field
-      //    from the `Member`s model.
       members: a.hasMany("Member", "teamId"),
+    }),
+    Word: a.model({
+      id: a.string(),
+      word: a.string(),
+      imgUrl: a.string(),
+      wordsListId: a.id(), // reference to WordsList
+      wordsList: a.belongsTo("WordsList", "wordsListId"),
+      timeStamp: a.string(),
+    }),
+    WordsList: a.model({
+      userId: a.string().required(), // each team belongs to a user
+      type: a.string().required(), // 'first' or 'backup'
+      mantra: a.string().required(),
+      list: a.hasMany("Word", "wordsListId"),
     }),
   })
   .authorization((allow) => [allow.owner()]);
