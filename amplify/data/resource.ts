@@ -16,19 +16,9 @@ const schema = a
       mantra: a.string().required(),
       members: a.hasMany("Member", "teamId"),
     }),
-    Word: a.model({
-      id: a.string(),
-      word: a.string(),
-      imgUrl: a.string(),
-      wordsListId: a.id(), // reference to WordsList
-      wordsList: a.belongsTo("WordsList", "wordsListId"),
-      timeStamp: a.string(),
-    }),
     WordsList: a.model({
-      userId: a.string().required(), // each team belongs to a user
       type: a.string().required(), // 'first' or 'backup'
-      mantra: a.string().required(),
-      list: a.hasMany("Word", "wordsListId"),
+      list: a.json().array(),
     }),
   })
   .authorization((allow) => [allow.owner()]);
