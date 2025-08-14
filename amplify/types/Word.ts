@@ -16,7 +16,8 @@ export const Word = a.model({
   id: a.string(),
   word: a.string(),
   imgUrl: a.string(),
-  meanings: a.ref("Meaning").array(),
-  phonetics: a.ref("Phonetic").array(),
+  //   meanings: a.ref("Meaning").array(),
+  //   phonetics: a.ref("Phonetic").array(),
+  listType: a.string(), // e.g., "favorites", "to-learn"
   timeStamp: a.string(),
 });

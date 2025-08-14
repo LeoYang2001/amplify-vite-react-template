@@ -6,13 +6,20 @@ const schema = a
     Todo: a.model({
       content: a.string(),
     }),
-    WordsList: a.model({
-      uid: a.string(), // User's unique ID
-      collectedWords: a.ref("Word").array(),
+    Member: a.model({
+      name: a.string().required(),
+      // 1. Create a reference field
+      teamId: a.id(),
+      // 2. Create a belongsTo relationship with the reference field
+      team: a.belongsTo("Team", "teamId"),
     }),
-    Word, // <-- Add this line
-    Meaning, // <-- Add this line
-    Phonetic, // <-- Add this line
+
+    Team: a.model({
+      mantra: a.string().required(),
+      // 3. Create a hasMany relationship with the reference field
+      //    from the `Member`s model.
+      members: a.hasMany("Member", "teamId"),
+    }),
   })
   .authorization((allow) => [allow.owner()]);
 
