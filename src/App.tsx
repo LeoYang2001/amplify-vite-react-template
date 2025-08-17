@@ -9,10 +9,6 @@ function App() {
   const [wordsLists, setWordsLists] = useState<
     Array<Schema["WordsList"]["type"]>
   >([]);
-  const [selectedListId, setSelectedListId] = useState<string | null>(null);
-  const [type, setType] = useState("first"); // 'first' or 'backup'
-  const [words, setWords] = useState<Array<Schema["Word"]["type"]>>([]);
-  const [wordInput, setWordInput] = useState("");
   const [rawJsonInput, setRawJsonInput] = useState("");
   const [selectedTypeForJsonWord, setSelectedTypeForJsonWord] = useState("");
   const { user, signOut } = useAuthenticator();
@@ -44,79 +40,6 @@ function App() {
     setup();
   }, []); // Only run once on mount
 
-  useEffect(() => {
-    // Fetch words for the selected WordsList
-    if (selectedListId) {
-      client.models.Word.list({
-        filter: { wordsListId: { eq: selectedListId } },
-      }).then((res) => {
-        setWords(res.data);
-      });
-    } else {
-      setWords([]);
-    }
-  }, [selectedListId]);
-
-  async function addWord() {
-    if (!wordInput || !selectedListId) return;
-    const wordData = { word: wordInput, timeStamp: new Date().toISOString() };
-    try {
-      await client.models.Word.create({
-        id: crypto.randomUUID(),
-        data: JSON.stringify(wordData),
-        wordsListId: selectedListId,
-      });
-      setWordInput("");
-      // Refresh words
-      const res = await client.models.Word.list({
-        filter: { wordsListId: { eq: selectedListId } },
-      });
-      setWords(res.data);
-    } catch (error) {
-      console.error("Error adding word:", error);
-      alert("Failed to add word. Please try again.");
-    }
-  }
-
-  async function createWordsList() {
-    // Create a new WordsList of the selected type if it doesn't exist
-    if (!wordsLists.find((l) => l.type === type)) {
-      try {
-        const res = await client.models.WordsList.create({ type });
-        if (res.data) setSelectedListId(res.data.id);
-      } catch (error) {
-        console.error("Error creating WordsList:", error);
-        alert("Failed to create WordsList. Please try again.");
-      }
-    }
-  }
-
-  async function createWord() {
-    console.log("Creating test WordsList...");
-    // Create a WordsList of type 'test'
-
-    const testWord = {
-      id: crypto.randomUUID(),
-      data: JSON.stringify({
-        word: "example",
-        timeStamp: new Date().toISOString(),
-      }),
-    };
-    console.log(client.models);
-    const wordRes = await client.models.Word.create(testWord);
-
-    console.log(wordRes);
-    const listRes = await client.models.WordsList.create({ type: "test" });
-
-    if (listRes.data && wordRes.data) {
-      // 3. Update the word to associate with the WordsList
-      await client.models.Word.update({
-        id: wordRes.data.id,
-        wordsListId: listRes.data.id,
-      });
-    }
-  }
-
   async function handleAddJsonWord() {
     if (!rawJsonInput || !selectedTypeForJsonWord)
       return alert("JSON and type required");
@@ -137,12 +60,6 @@ function App() {
       });
       setRawJsonInput("");
       alert("Word added to list!");
-      if (selectedListId === list.id) {
-        const res = await client.models.Word.list({
-          filter: { wordsListId: { eq: list.id } },
-        });
-        setWords(res.data);
-      }
     } catch (error) {
       console.error("Error adding JSON word:", error);
       alert("Failed to add word. Please try again.");
