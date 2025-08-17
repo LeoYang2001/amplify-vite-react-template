@@ -2,9 +2,6 @@ import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
 const schema = a
   .schema({
-    Todo: a.model({
-      content: a.string(),
-    }),
     WordsList: a.model({
       type: a.string().required(), // 'first' or 'backup'
       list: a.hasMany("Word", "wordsListId"),
